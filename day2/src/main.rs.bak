@@ -1,0 +1,87 @@
+use std::fs;
+
+const ROCK_OUT: &str = "X";
+const PAPER_OUT: &str = "Y";
+const SCISSORS_OUT: &str = "Z";
+
+fn main() {
+    let input = fs::read_to_string("./src/input.txt").expect("should open input");
+    let max_score: usize = input
+        .split("\n")
+        .filter(|x| x.len() > 1)
+        .map(|x| calculate_score(x))
+        .sum();
+    println!("{}", max_score);
+}
+
+#[derive(Debug)]
+enum Outcome {
+    Win,
+    Draw,
+    Lose,
+}
+
+fn calculate_score(input: &str) -> usize {
+    let shape_rock = 1;
+    let shape_paper = 2;
+    let shape_scissors = 3;
+
+    let outcome_win = 6;
+    let outcome_draw = 3;
+    let outcome_lose = 0;
+
+    let shapes_played: Vec<_> = input.split(" ").collect();
+
+    let mut shape_score = 0;
+    if shapes_played[1] == ROCK_OUT {
+        shape_score = shape_rock;
+    } else if shapes_played[1] == PAPER_OUT {
+        shape_score = shape_paper;
+    } else if shapes_played[1] == SCISSORS_OUT {
+        shape_score = shape_scissors;
+    }
+
+    match check_match_outcome(input) {
+        Outcome::Win => return outcome_win + shape_score,
+        Outcome::Draw => return outcome_draw + shape_score,
+        Outcome::Lose => return outcome_lose + shape_score,
+    }
+}
+
+fn check_match_outcome(input: &str) -> Outcome {
+    let rock_in = "A";
+    let paper_in = "B";
+    // let scissors_in = "C";
+
+    let inputs: Vec<_> = input.split(" ").collect();
+
+    if inputs[0] == rock_in {
+        if inputs[1] == ROCK_OUT {
+            return Outcome::Draw;
+        } else if inputs[1] == PAPER_OUT {
+            return Outcome::Win;
+        } else {
+            // if inputs[1] == SCISSORS_OUT {
+            return Outcome::Lose;
+        }
+    } else if inputs[0] == paper_in {
+        if inputs[1] == PAPER_OUT {
+            return Outcome::Draw;
+        } else if inputs[1] == SCISSORS_OUT {
+            return Outcome::Win;
+        } else {
+            // if inputs[1] == ROCK_OUT {
+            return Outcome::Lose;
+        }
+    } else {
+        // if inputs[0] == scissors_in {
+        if inputs[1] == SCISSORS_OUT {
+            return Outcome::Draw;
+        } else if inputs[1] == ROCK_OUT {
+            return Outcome::Win;
+        } else {
+            // if inputs[1] == PAPER_OUT {
+            return Outcome::Lose;
+        }
+    }
+}
