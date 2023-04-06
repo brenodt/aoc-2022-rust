@@ -19,7 +19,6 @@ fn main() {
                 true => sum += get_lowercase_score(letter),
                 false => sum += get_uppercase_score(letter),
             }
-            break;
         }
     }
 
